@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shrouk Special Intro - Waves Effect</title>
+    <style>
+        :root {
+            --hacker-color: #0f0;
+            --heart-color: #ff2d55;
+            --text-color: #ffffff;
+            --glow-color: rgba(255, 45, 85, 0.6);
+            --wave-color: rgba(255, 45, 85, 0.3);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #1a0005 0%, #000000 100%);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Hacker Background */
+        #hacker-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        /* Stars Background */
+        #stars-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            display: none;
+        }
+
+        /* Main Container */
+        #main-container {
+            position: relative;
+            z-index: 20;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+        }
+
+        /* Advanced Animated Heart with Waves */
+        .heart-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .heart {
+            fill: var(--heart-color);
+            width: 130px;
+            height: 130px;
+            animation: heartBeat 1.2s ease-in-out infinite;
+            filter: drop-shadow(0 0 15px var(--heart-color));
+            z-index: 2;
+        }
+
+        /* Heart Waves (Ripples) */
+        .wave {
+            position: absolute;
+            border: 2px solid var(--wave-color);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 1;
+            animation: waveRipple 2.4s linear infinite;
+        }
+
+        .wave:nth-child(2) { animation-delay: 0.8s; }
+        .wave:nth-child(3) { animation-delay: 1.6s; }
+
+        @keyframes waveRipple {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .heart-glow {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: var(--glow-color);
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: glowPulse 1.2s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.2); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.2); }
+            70% { transform: scale(1); }
+        }
+
+        @keyframes glowPulse {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+            100% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        /* Love Message */
+        #love-message {
+            color: var(--text-color);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 0 0 10px var(--glow-color);
+            font-weight: 300;
+        }
+
+        /* Name Letters */
+        #name-display {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 900;
+            color: var(--text-color);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+            perspective: 1000px;
+        }
+
+        .letter {
+            opacity: 0;
+            transform: rotateX(-90deg) translateZ(50px);
+            display: inline-block;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            transition: all 0.6s cubic-bezier(0.5, -0.5, 0.5, 1.5);
+        }
+
+        /* Signature */
+        #signature {
+            font-size: 1.3rem;
+            color: var(--hacker-color);
+            font-family: 'Courier New', Courier, monospace;
+            opacity: 0;
+            margin-top: 30px;
+            padding: 5px 15px;
+            border: 1px solid var(--hacker-color);
+            border-radius: 4px;
+            box-shadow: 0 0 10px var(--hacker-color);
+            letter-spacing: 3px;
+        }
+
+        .show-letter {
+            opacity: 1;
+            transform: rotateX(0deg) translateZ(0);
+        }
+
+        .fade-in {
+            opacity: 1 !important;
+            transform: scale(1) !important;
+        }
+
+        /* Background Stars */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle var(--duration) infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .sparkle-particle {
+            position: absolute;
+            pointer-events: none;
+            background: white;
+            border-radius: 50%;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="hacker-canvas"></canvas>
+    <div id="stars-container"></div>
+
+    <div id="main-container">
+        <div class="heart-wrapper">
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="heart-glow"></div>
+            <svg class="heart" viewBox="0 0 32 32">
+                <path d="M16 28.5L14.1 26.7C7.3 20.5 3 16.5 3 11.5 3 7.4 6.1 4.3 10.2 4.3c2.3 0 4.5 1.1 5.8 2.8 1.4-1.7 3.5-2.8 5.8-2.8 4.1 0 7.2 3.1 7.2 7.2 0 5-4.3 9-11.1 15.2L16 28.5z"/>
+            </svg>
+        </div>
+        
+        <div id="love-message">ستظلين دائماً أجمل ما في حياتي</div>
+        
+        <div id="name-display"></div>
+        
+        <div id="signature">7ØUD3</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('hacker-canvas');
+        const ctx = canvas.getContext('2d');
+        const mainContainer = document.getElementById('main-container');
+        const nameDisplay = document.getElementById('name-display');
+        const loveMessage = document.getElementById('love-message');
+        const signature = document.getElementById('signature');
+        const starsContainer = document.getElementById('stars-container');
+
+        // Hacker Effect
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const alphabet = '010101010101'; 
+        const fontSize = 18;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.ceil(columns)).fill(1);
+
+        function drawHackerEffect() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#0f0';
+            ctx.font = 'bold ' + fontSize + 'px monospace';
+            for (let i = 0; i < drops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        function createStars() {
+            for(let i=0; i<150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+                starsContainer.appendChild(star);
+            }
+        }
+
+        let hackerInterval = setInterval(drawHackerEffect, 30);
+
+        setTimeout(() => {
+            clearInterval(hackerInterval);
+            canvas.style.transition = 'opacity 1.5s ease';
+            canvas.style.opacity = '0';
+            createStars();
+            starsContainer.style.display = 'block';
+
+            setTimeout(() => {
+                canvas.style.display = 'none';
+                startIntro();
+            }, 1500);
+        }, 2000);
+
+        function startIntro() {
+            mainContainer.style.display = 'flex';
+            setTimeout(() => {
+                loveMessage.classList.add('fade-in');
+                setTimeout(revealName, 1200);
+            }, 800);
+        }
+
+        function revealName() {
+            const fullName = "SHROUK MY LOVE";
+            fullName.split('').forEach((char, index) => {
+                const span = document.createElement('span');
+                span.textContent = char === ' ' ? '\u00A0' : char; 
+                span.className = 'letter';
+                nameDisplay.appendChild(span);
+
+                setTimeout(() => {
+                    span.classList.add('show-letter');
+                    if(char !== ' ') burstSparkles(span);
+                    if (index === fullName.length - 1) {
+                        setTimeout(() => {
+                            signature.classList.add('fade-in');
+                        }, 1000);
+                    }
+                }, index * 200); 
+            });
+        }
+
+        function burstSparkles(element) {
+            const rect = element.getBoundingClientRect();
+            for(let i=0; i<8; i++) {
+                const p = document.createElement('div');
+                p.className = 'sparkle-particle';
+                const size = Math.random() * 4 + 2;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.left = (rect.left + rect.width/2) + 'px';
+                p.style.top = (rect.top + rect.height/2) + 'px';
+                p.style.background = `hsl(${Math.random() * 60 + 330}, 100%, 70%)`;
+                document.body.appendChild(p);
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 4 + 2;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+                let opacity = 1;
+                const anim = setInterval(() => {
+                    p.style.left = (parseFloat(p.style.left) + vx) + 'px';
+                    p.style.top = (parseFloat(p.style.top) + vy) + 'px';
+                    opacity -= 0.02;
+                    p.style.opacity = opacity;
+                    if(opacity <= 0) {
+                        clearInterval(anim);
+                        p.remove();
+                    }
+                }, 16);
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
+
