@@ -4,403 +4,347 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>إلى حبيبتي شروق ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@1&family=Aref+Ruqaa:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@1&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-red: #ff4d6d;
             --dark-red: #800e13;
             --soft-pink: #ffccd5;
             --gold: #ffd700;
+            --bg-dark: #0a0101;
         }
 
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
         }
 
         body, html {
-            margin: 0;
-            padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
-            background-color: #000;
-            font-family: 'Amiri', serif;
+            background-color: var(--bg-dark);
+            font-family: 'Cairo', sans-serif;
             color: white;
-            touch-action: manipulation;
+            overflow-x: hidden;
         }
 
-        /* شاشة القفل */
+        /* Lock Screen */
         #lock-screen {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: #000;
+            background: radial-gradient(circle at center, #200505 0%, #000 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 10000;
-            transition: opacity 1s ease-in-out;
-            padding: 20px;
-        }
-
-        #heart-canvas {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: -1;
+            transition: opacity 0.8s ease;
         }
 
         .lock-container {
-            background: rgba(0, 0, 0, 0.75);
-            padding: clamp(20px, 5vw, 40px);
+            background: rgba(20, 0, 0, 0.9);
+            padding: 30px;
             border-radius: 25px;
             border: 1px solid var(--primary-red);
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
             text-align: center;
-            box-shadow: 0 0 30px rgba(255, 77, 109, 0.3);
-            width: 100%;
+            width: 85%;
             max-width: 380px;
-        }
-
-        .lock-container h2 {
-            font-family: 'Aref Ruqaa', serif;
-            margin-bottom: 25px;
-            color: var(--soft-pink);
-            font-size: clamp(1.2rem, 4vw, 1.8rem);
         }
 
         .lock-input {
             background: rgba(255, 255, 255, 0.05);
-            border: none;
-            border-bottom: 2px solid var(--primary-red);
+            border: 1px solid var(--primary-red);
             color: white;
             padding: 12px;
-            font-size: 1.2rem;
-            text-align: center;
-            outline: none;
             width: 100%;
-            max-width: 250px;
-            margin-bottom: 25px;
-            border-radius: 8px 8px 0 0;
-        }
-
-        .lock-btn {
-            background: var(--primary-red);
-            color: white;
-            border: none;
-            padding: 12px 35px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: transform 0.2s;
-        }
-
-        /* نظام الصفحات */
-        .page {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .page.active {
-            display: flex;
-            animation: fadeIn 0.8s forwards;
-        }
-
-        #page-text { 
-            background: radial-gradient(circle at center, #1a0505 0%, #000 100%); 
-        }
-
-        .poem-scroll {
-            width: 100%;
-            max-width: 650px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            overflow-y: auto;
-            padding: 40px 10px;
-            scrollbar-width: none;
-        }
-        .poem-scroll::-webkit-scrollbar { display: none; }
-
-        h1 { 
-            font-family: 'Aref Ruqaa', serif; 
-            color: var(--primary-red); 
-            font-size: clamp(2.2rem, 7vw, 3.5rem); 
-            margin-bottom: 30px;
-            flex-shrink: 0;
-        }
-
-        .verses { 
-            font-size: clamp(1.1rem, 3.5vw, 1.4rem); 
-            line-height: 1.8; 
-            margin-bottom: 20px;
-            color: #fdfdfd;
-        }
-
-        .divider {
-            height: 1px;
-            background: linear-gradient(to right, transparent, var(--primary-red), transparent);
-            margin: 20px auto;
-            width: 70%;
-            flex-shrink: 0;
-        }
-
-        .next-btn {
-            background: var(--primary-red);
-            color: white;
-            border: none;
-            padding: clamp(10px, 2.5vw, 15px) clamp(25px, 5vw, 40px);
-            font-size: clamp(1rem, 3vw, 1.3rem);
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 0 15px var(--primary-red);
             margin: 20px 0;
-            flex-shrink: 0;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.1rem;
         }
 
-        /* إطار الفيديو */
-        .video-wrapper {
-            position: relative;
+        /* Main Content Container */
+        #main-content {
+            display: none; /* Hidden until unlocked */
+            width: 100%;
+            padding-bottom: 160px;
+        }
+
+        .container {
             width: 90%;
-            max-width: 320px;
-            aspect-ratio: 9 / 16;
-            border-radius: 20px;
-            padding: 8px;
-            background: linear-gradient(45deg, var(--dark-red), var(--primary-red));
-            box-shadow: 0 0 40px rgba(255, 77, 109, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        #main-video { 
-            width: 100%; 
-            height: 100%;
-            border-radius: 15px; 
-            object-fit: cover;
-            display: block; 
+        section {
+            padding: 40px 0;
+            border-bottom: 1px solid rgba(255,215,0,0.1);
         }
 
-        .signature {
-            margin-top: clamp(20px, 5vh, 40px);
+        h2 {
             font-family: 'Aref Ruqaa', serif;
-            font-size: clamp(1.8rem, 6vw, 2.8rem);
-            color: var(--primary-red);
-            text-shadow: 0 0 10px rgba(255, 77, 109, 0.5);
+            color: var(--gold);
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-align: center;
         }
 
-        .particle { position: fixed; pointer-events: none; z-index: 10; animation: fall linear forwards; }
+        /* Poem & Images */
+        .poem-block {
+            text-align: center;
+            font-family: 'Amiri', serif;
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: var(--soft-pink);
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        .img-wrapper {
+            width: 100%;
+            margin: 20px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid var(--primary-red);
+        }
 
-        .audio-control {
+        .img-wrapper img {
+            width: 100%;
+            display: block;
+        }
+
+        /* Responsive Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .video-box {
+            background: #1a0505;
+            border: 1px solid var(--gold);
+            border-radius: 12px;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .video-box.full-width {
+            grid-column: span 2;
+            background: #2a0a0a;
+        }
+
+        .video-box i { font-size: 2rem; margin-bottom: 8px; }
+
+        /* Quotes */
+        .quote-item {
+            background: rgba(255, 77, 109, 0.1);
+            border-right: 4px solid var(--primary-red);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-family: 'Amiri', serif;
+            font-size: 1.2rem;
+        }
+
+        /* Music Player */
+        #player-ui {
             position: fixed;
             bottom: 20px;
-            left: 20px;
-            background: var(--primary-red);
-            border: none;
-            color: white;
-            width: 44px; height: 44px;
-            border-radius: 50%;
-            z-index: 101;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            background: rgba(15, 0, 0, 0.95);
+            border: 1px solid var(--primary-red);
+            border-radius: 20px;
+            padding: 15px;
+            z-index: 9000;
+            display: none;
+        }
+
+        .prog-bg { width: 100%; height: 6px; background: #333; border-radius: 5px; margin: 10px 0; overflow: hidden; }
+        #prog-bar { height: 100%; background: var(--primary-red); width: 0%; }
+
+        /* Overlay */
+        #overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: black;
+            z-index: 11000;
+            display: none;
             justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #overlay video { width: 95%; max-height: 80vh; border: 1px solid var(--primary-red); }
+
+        /* Hearts */
+        .heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            animation: move linear forwards;
+        }
+        @keyframes move {
+            from { transform: translateY(105vh); opacity: 1; }
+            to { transform: translateY(-10vh); opacity: 0; }
+        }
+
+        .btn {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <!-- شاشة القفل -->
     <div id="lock-screen">
-        <canvas id="heart-canvas"></canvas>
         <div class="lock-container">
-            <h2>أدخلي كلمة السر يا أميرتي ❤️</h2>
-            <input type="password" id="pass-input" class="lock-input" placeholder="shosho" autocomplete="off">
-            <br>
-            <button class="lock-btn" onclick="checkPassword()">دخول</button>
-            <p id="error-msg" style="color: #ffda00; font-size: 0.9rem; margin-top: 15px; display: none; font-weight: bold;">كلمة السر غير صحيحة يا شروق!</p>
+            <h2 style="margin:0 0 15px 0;">حبيبتي شروق ❤️</h2>
+            <input type="password" id="pw" class="lock-input" placeholder="كلمة السر (shosho)">
+            <button class="btn" onclick="unlock()">دخول </button>
         </div>
     </div>
 
-    <!-- الموسيقى الخلفية -->
-    <audio id="bg-music" loop>
-        <source src="https://l.top4top.io/m_375430pr31.mp3" type="audio/mpeg">
+    <audio id="audio" loop>
+        <source src="https://c.top4top.io/m_3775q6dr31.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- الصفحة الأولى: الكلام -->
-    <div id="page-text" class="page">
-        <div class="poem-scroll">
-            <h1>إلى حبيبتي شروق ❤️</h1>
+    <div id="player-ui">
+        <div style="display:flex; justify-content:space-between; font-size:0.7rem; color:var(--soft-pink);">
+            <span id="t-cur">0:00</span>
+            <span>أنتِ كُل حياتي ❤️</span>
+            <span id="t-dur">0:00</span>
+        </div>
+        <div class="prog-bg"><div id="prog-bar"></div></div>
+        <div style="display:flex; justify-content:center; gap:20px; align-items:center;">
+            <button onclick="audio.currentTime-=10" style="background:none; border:none; color:white;">⏪</button>
+            <button id="p-btn" onclick="togglePlay()" style="background:none; border:none; color:white; font-size:1.5rem;">⏸️</button>
+            <button onclick="audio.currentTime+=10" style="background:none; border:none; color:white;">⏩</button>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="container">
             
-            <!-- القصيدة الأولى -->
-            <div class="verses">
-                <p>عيونك زي ليل هادي.. بيسرق مني تفكيري</p>
-                <p>ونظرة منها بتكفي.. تغيّر حالي ومصيري</p>
-                <p>وبسمتك لما تترسم.. كأن الصبح لسه بيبتدي</p>
-                <p>تنسيني الوجع والهم.. وتنوّر عمري وايدي</p>
-                <p>يا وشٍّ ملامحه مرسومة.. بـ ريشة حُب فنان</p>
-                <p>جمالك ده حكاية قديمة.. ماليها الشوق والحنان</p>
-            </div>
+            <section id="poem-sec">
+                <h2>57204K ❤️</h2>
+                <div class="poem-block">
+                    <p>عيونك زي ليل هادي.. بيسرق مني تفكيري</p>
+                    <div class="img-wrapper"><img src="https://a.top4top.io/p_377537hit1.jpg"></div>
+                    <p>ونظرة منها بتكفي.. تغيّر حالي ومصيري</p>
+                    <div class="img-wrapper"><img src="https://b.top4top.io/p_3775oftzx1.jpg"></div>
+                    <p>وبسمتك لما تترسم.. كأن الصبح لسه بيبتدي</p>
+                    <div class="img-wrapper"><img src="https://d.top4top.io/p_3775hl1es1.jpg"></div>
+                    <p>تنسيني الوجع والهم.. وتنوّر عمري وايدي</p>
+                    <div class="img-wrapper"><img src="https://c.top4top.io/p_377555y3k1.jpg"></div>
+                    <p>يا أغلى من الهوا والروح.. يا شروق اللي منوّرني</p>
+                    <div class="img-wrapper"><img src="https://e.top4top.io/p_3775e5qx01.jpg"></div>
+                    <p>يداوي فيا كل جروح.. وحبك هو اللي صبرني</p>
+                    <div class="img-wrapper"><img src="https://l.top4top.io/p_3775spcqj1.jpg"></div>
+                    <p>وعد عليا طول العمر.. هفضل جنبك وأصونك</p>
+                    <div class="img-wrapper"><img src="https://g.top4top.io/p_37759a39m1.jpg"></div>
+                    <p>نعدي سوا كل المر.. وعيني تعشق عيونك</p>
+                    <div class="img-wrapper"><img src="https://h.top4top.io/p_3775yi6e01.jpg"></div>
+                </div>
+            </section>
 
-            <div class="divider"></div>
+            <section id="vid-sec">
+                <h2>ذكرياتنا 🎬</h2>
+                <div class="video-grid">
+                    <div class="video-box" onclick="vOpen('https://g.top4top.io/m_3775ly43m1.mp4')"><i>🌸</i><span>فيديو 1</span></div>
+                    <div class="video-box" onclick="vOpen('https://h.top4top.io/m_3775renpx1.mp4')"><i>✨</i><span>فيديو 2</span></div>
+                    <div class="video-box" onclick="vOpen('https://i.top4top.io/m_3775oti4g1.mp4')"><i>⭐</i><span>فيديو 3</span></div>
+                    <div class="video-box" onclick="vOpen('https://j.top4top.io/m_3775bljte1.mp4')"><i>🎀</i><span>فيديو 4</span></div>
+                    <div class="video-box full-width" onclick="vOpen('https://d.top4top.io/m_3755imkws1.mp4')"><i>👑</i><span>الفيديو الرئيسي ❤️</span></div>
+                </div>
+            </section>
 
-            <!-- القصيدة الثانية -->
-            <div class="verses" style="color: var(--soft-pink);">
-                <p>تتوقف الدنيا في عيني حين ألقاها</p>
-                <p>وتسكن الروح في محراب عيناها</p>
-                <p>نبضات قلبي تعزف اللحن في صدري</p>
-                <p>كأنني بالنظرِ قد ملكتُ دُنياها</p>
-                <p>أحسُّ أني في أعلى مراتبِ السعدِ</p>
-                <p>ولا إحساسَ في الكونِ يُضاهي رؤياها</p>
-            </div>
+            <section id="msgs-sec">
+                <h2>رسائل حب ❤️</h2>
+                <div class="quote-item">وما كنت ممن يدخل العشق قلبه.. ولكن من يبصر جفونك يعشقُ 👀</div>
+                <div class="quote-item">"لا تفكري حالك مثل كل البنات.. انتي عيونك تسواهن" 💎</div>
+                <div class="quote-item">يراك أحداً كما رأيتك أنا.. رأيتك بروحي فأدمنتك.. رأيتك بعيني فعشقتك.. رأيتك بقلبي فأحببتك 💖</div>
+                <div class="quote-item">أعشقك بعقل مجنون وأحبك بقلب لا يعرف يخون.. 😘</div>
+                <h3 style="text-align:center; color:var(--gold); margin-top:30px;">بحبك يا شروق ❤️</h3>
+            </section>
 
-            <div class="divider"></div>
-
-            <!-- القصيدة الثالثة -->
-            <div class="verses" style="font-style: italic;">
-                <p>نظرةُ عينيكِ اختصارٌ لكلِّ اللغات</p>
-                <p>وسحرُهما غرقٌ لا يرجو منه النجاة</p>
-                <p>فسبحان من صوّر في عينيكِ الجمال</p>
-                <p>وجعل القلب في حُسنهما تائهاً هِيام</p>
-            </div>
-
-            <button class="next-btn" onclick="showVideoPage()">رؤية المفاجأة ❤️</button>
         </div>
     </div>
 
-    <!-- الصفحة الثانية: الفيديو -->
-    <div id="page-video" class="page">
-        <div class="video-wrapper">
-            <video id="main-video" loop playsinline>
-                <source src="https://d.top4top.io/m_3755imkws1.mp4" type="video/mp4">
-            </video>
-        </div>
-        <div class="signature">My Love SHROUK ❤️</div>
-        <button class="next-btn" style="margin-top: 15px; background: transparent; border: 1.5px solid white; box-shadow: none;" onclick="showTextPage()">العودة للقصائد</button>
+    <div id="overlay">
+        <video id="v-play" controls playsinline></video>
+        <button class="btn" style="margin-top:20px;" onclick="vClose()">إغلاق ✖️</button>
     </div>
-
-    <button class="audio-control" onclick="toggleAudio()" id="audio-btn">🔊</button>
 
     <script>
-        const audio = document.getElementById('bg-music');
-        const video = document.getElementById('main-video');
-        let isMusicPlaying = false;
-
-        // --- أنيميشن القلب المتجاوب ---
-        const canvas = document.getElementById('heart-canvas');
-        const ctx = canvas.getContext('2d');
-        let t = 0;
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        function heartPosition(t) {
-            const x = 16 * Math.pow(Math.sin(t), 3);
-            const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-            const size = Math.min(canvas.width, canvas.height) / (window.innerWidth < 500 ? 55 : 45);
-            return { x: x * size, y: y * size };
-        }
-
-        function drawHeart() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = '#ff4d6d';
-            ctx.lineWidth = window.innerWidth < 500 ? 2 : 3;
-            ctx.lineCap = 'round';
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = '#ff4d6d';
-
-            ctx.beginPath();
-            const start = heartPosition(0);
-            ctx.moveTo(canvas.width / 2 + start.x, canvas.height / 2 + start.y);
-
-            for (let i = 0; i < t; i += 0.05) {
-                const pos = heartPosition(i);
-                ctx.lineTo(canvas.width / 2 + pos.x, canvas.height / 2 + pos.y);
-            }
-            ctx.stroke();
-
-            if (t < Math.PI * 2) {
-                t += 0.05;
+        function unlock() {
+            if(document.getElementById('pw').value.toLowerCase() === 'shosho') {
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                document.getElementById('player-ui').style.display = 'block';
+                document.getElementById('audio').play();
+                startHearts();
             } else {
-                t = 0;
-            }
-            requestAnimationFrame(drawHeart);
-        }
-        drawHeart();
-
-        function checkPassword() {
-            const input = document.getElementById('pass-input').value;
-            if (input.toLowerCase() === 'shosho') {
-                document.getElementById('lock-screen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('lock-screen').style.display = 'none';
-                    document.getElementById('page-text').classList.add('active');
-                    audio.play().catch(() => { });
-                    isMusicPlaying = true;
-                    setInterval(spawnParticle, 500);
-                }, 1000);
-            } else {
-                document.getElementById('error-msg').style.display = 'block';
+                alert("كلمة السر خطأ يا قلبي");
             }
         }
 
-        function showVideoPage() {
-            document.getElementById('page-text').classList.remove('active');
-            document.getElementById('page-video').classList.add('active');
+        const audio = document.getElementById('audio');
+        function togglePlay() {
+            if(audio.paused) { audio.play(); document.getElementById('p-btn').innerText = '⏸️'; }
+            else { audio.pause(); document.getElementById('p-btn').innerText = '▶️'; }
+        }
+
+        audio.ontimeupdate = () => {
+            document.getElementById('prog-bar').style.width = (audio.currentTime/audio.duration)*100 + '%';
+            document.getElementById('t-cur').innerText = fmt(audio.currentTime);
+            if(audio.duration) document.getElementById('t-dur').innerText = fmt(audio.duration);
+        };
+
+        function fmt(s) {
+            let m = Math.floor(s/60);
+            let sc = Math.floor(s%60);
+            return m + ":" + (sc < 10 ? '0'+sc : sc);
+        }
+
+        function vOpen(s) {
             audio.pause();
-            video.play();
+            document.getElementById('overlay').style.display = 'flex';
+            const v = document.getElementById('v-play');
+            v.src = s; v.play();
         }
 
-        function showTextPage() {
-            document.getElementById('page-video').classList.remove('active');
-            document.getElementById('page-text').classList.add('active');
-            video.pause();
-            if (isMusicPlaying) audio.play();
+        function vClose() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('v-play').pause();
+            audio.play();
         }
 
-        function spawnParticle() {
-            if(document.hidden) return;
-            const p = document.createElement('div');
-            p.className = 'particle';
-            p.innerHTML = '❤️';
-            p.style.left = Math.random() * 100 + 'vw';
-            p.style.top = '-5vh';
-            p.style.fontSize = (Math.random() * 10 + 15) + 'px';
-            const duration = Math.random() * 3 + 4;
-            p.style.animation = `fall ${duration}s linear forwards`;
-            document.body.appendChild(p);
-            setTimeout(() => p.remove(), duration * 1000);
-        }
-
-        function toggleAudio() {
-            const btn = document.getElementById('audio-btn');
-            if (isMusicPlaying) {
-                audio.pause();
-                btn.innerHTML = '🔇';
-                isMusicPlaying = false;
-            } else {
-                if (document.getElementById('page-text').classList.contains('active')) audio.play();
-                btn.innerHTML = '🔊';
-                isMusicPlaying = true;
-            }
+        function startHearts() {
+            setInterval(() => {
+                const h = document.createElement('div');
+                h.className = 'heart';
+                h.innerHTML = ['❤️','💖','✨'][Math.floor(Math.random()*3)];
+                h.style.left = Math.random() * 100 + 'vw';
+                h.style.fontSize = (Math.random()*20 + 15) + 'px';
+                h.style.animationDuration = (Math.random()*3 + 3) + 's';
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 5000);
+            }, 400);
         }
     </script>
 </body>
